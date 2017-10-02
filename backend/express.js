@@ -33,6 +33,7 @@ const expressConfig = (app, serverConfigs) => {
     resave: false,
     saveUninitialized: true,
     secret: 'secret',
+    domain:'.gramquiz.com',
     store: new mongoStore({
       url: serverConfigs.DBURL,
       collection : 'sessions',
