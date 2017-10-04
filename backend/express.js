@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const mongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
+const cookieSession = require('cookie-session');
 
 /**
  * express configuration
@@ -29,16 +30,23 @@ const expressConfig = (app, serverConfigs) => {
   app.use(cookieParser());
 
   // use session with mongo
-  app.use(session({
-    resave: false,
-    saveUninitialized: true,
-    secret: 'secret',
+  app.use(cookieSession({
+    name: 'session',
+    keys: [process.env.SESSION_SECRET],
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
     domain:'.gramquiz.com',
-    store: new mongoStore({
-      url: serverConfigs.DBURL,
-      collection : 'sessions',
-    }),
   }));
+
+  // (session({
+  //   resave: false,
+  //   saveUninitialized: true,
+  //   secret: 'secret',
+  //   domain:'.gramquiz.com',
+  //   store: new mongoStore({
+  //     url: serverConfigs.DBURL,
+  //     collection : 'sessions',
+  //   }),
+  // }));
 
   // use passport session
   app.use(passport.initialize());
